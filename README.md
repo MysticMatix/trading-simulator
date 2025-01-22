@@ -12,8 +12,8 @@ The project consists of the following modules:
 
 *   `data_handler.py`: Fetches, stores, and provides historical market data.
 *   `strategies/`: Contains different trading strategies.
-    *   `moving_average.py`: Implements a moving average crossover strategy.
-    *    `rsi.py`: Implements an RSI based strategy.
+   *   `moving_average.py`: Implements a moving average crossover strategy.
+   *    `rsi.py`: Implements an RSI based strategy.
    *    `bollinger_bands.py`: Implements a Bollinger bands strategy.
    *    `stochastic_oscillator.py`: Implements a stochastic oscillator strategy. 
    *    `macd.py`: Implements a MACD based strategy.
