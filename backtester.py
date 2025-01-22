@@ -32,7 +32,7 @@ class Backtester:
 
         #current value of owned stocks:
         stock_price = data[-1]['close']
-        owned_stocks = self.broker.portfolio[symbol]
+        owned_stocks = self.broker.portfolio[symbol] if symbol in self.broker.portfolio else 0
         stock_value = owned_stocks * stock_price
 
         final_balance_with_stocks = final_balance + stock_value

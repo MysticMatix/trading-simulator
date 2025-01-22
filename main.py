@@ -13,9 +13,9 @@ def main():
     print_details = False
     print_history = False
 
-    gains = []
+    gains = {}
 
-    for symbol in symbols:
+    for symbol in additional_symbols_long:
         print(f"Running backtest for symbol: {symbol}")
         # Create instances
         data_fetcher = DataFetcher()
@@ -37,9 +37,9 @@ def main():
             continue
         
         # Run backtest
-        results = backtester.run_backtest(strategy, data, multiplier=2)
+        results = backtester.run_backtest(strategy, data, multiplier=2, symbol=symbol)
 
-        gains.append(results['profit_with_stocks'])
+        gains[symbol] = results['profit_with_stocks']
 
         # Print results
         if print_details:
@@ -56,7 +56,12 @@ def main():
                     print(transaction)
 
     print()
-    print(f"Total profit with stocks: {sum(gains)}, average profit with stocks: {sum(gains)/len(gains)}")
+    print("Gains:")
+    for symbol, gain in gains.items():
+        print(f"  {symbol}: {gain}")
+    print("average gain:", sum(gains.values()) / len(gains))
+    print("lowest gain:", min(gains.values()), "for", min(gains, key=gains.get))
+    print("highest gain:", max(gains.values()), "for", max(gains, key=gains.get))
 
 if __name__ == "__main__":
     main()
