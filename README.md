@@ -17,6 +17,8 @@ The project consists of the following modules:
       *    `bollinger_bands.py`: Implements a Bollinger bands strategy.
       *    `stochastic_oscillator.py`: Implements a stochastic oscillator strategy. 
       *    `macd.py`: Implements a MACD based strategy.
+      *    `ichimoku_cloud.py`: Implements an Ichimoku cloud based strategy.
+      *    `adx.py`: Implements an ADX based strategy.
 *   `strategy.py`: Defines the abstract base class for all trading strategies.
 *   `broker.py`: Simulates the execution of trades and manages the portfolio.
 *   `backtester.py`: Simulates the backtesting process.
@@ -35,7 +37,9 @@ The project consists of the following modules:
 *   **RSI:** Uses the Relative Strength Index to identify overbought and oversold conditions.
 *   **Bollinger Bands:** Uses Bollinger Bands to identify when a price might be overbought or oversold based on volatility.
 *   **Stochastic Oscillator:** Uses the stochastic oscillator to generate signals, based on momentum.
-*   **MACD:** Uses the Moving Average Convergence Divergence indicator to generate trading signals, based on the relationship between two moving averages. 
+*   **MACD:** Uses the Moving Average Convergence Divergence indicator to generate trading signals, based on the relationship between two moving averages.
+*   **Ichimoku Cloud:** Uses the Ichimoku Cloud indicator to generate trading signals, based on the relationship between the price and the cloud.
+*   **ADX:** Uses the Average Directional Index to generate trading signals, based on the strength of the trend.
 
 ## Further Development
 
