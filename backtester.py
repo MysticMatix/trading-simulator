@@ -1,11 +1,12 @@
 from broker import Broker
+from strategy import TradingStrategy
 
 class Backtester:
     def __init__(self, initial_balance: float) -> None:
         """Constructor, creates an internal `Broker` instance"""
         self.broker = Broker(initial_balance)
 
-    def run_backtest(self, strategy, data: list, symbol="ABCDEF", multiplier = 10) -> dict:
+    def run_backtest(self, strategy: TradingStrategy, data: list, symbol="ABCDEF", multiplier = 10) -> dict:
         """Simulates the backtest on given historical data and strategy and returns a dictionary of stats (total profit, number of trades, etc), using an internal `Broker` instance.
 
         Iterates through each data point, executes the trading strategy, updates balance using `Broker`, and returns stats.
