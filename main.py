@@ -4,6 +4,7 @@ from strategies.RSI import RSIStrategy
 from strategies.bollinger_bands import BollingerBandsStrategy
 from strategies.stochastic_oscillator import StochasticOscillatorStrategy
 from strategies.macd import MACDStrategy
+from strategies.ichimoku_cloud import IchimokuCloudStrategy
 from strategy import TradingStrategy
 from broker import Broker
 from backtester import Backtester
@@ -23,14 +24,14 @@ def main():
         "PFE", "MRNA", "JNJ", "BNTX", "MRK", "ABBV", "GILD", "CVS", "UNH", "TMO",
         "UPS", "FDX", "DE", "GM", "F", "RIVN", "LCID", "RCL", "CCL", "DAL",
         "AAL", "UAL", "LUV", "GE", "HON", "MMM", "DOW", "GLW", "APD", "BK",
-        "TROW", "VFC", "AMAT", "QCOM", "MU", "TXN", "FSLR", "RUN", "PLUG", "SPWR",
+        "TROW", "VFC", "AMAT", "QCOM", "MU", "TXN", "FSLR", "RUN", "PLUG",
         "COP", "SLB", "HAL", "MRO", "EOG", "LMT", "RTX", "GD", "NOC", "PYPL",
-        "ADSK", "ATVI", "EA", "TTWO", "MTCH", "BKNG", "DPZ", "MAR", "HAS", "MAT"
+        "ADSK", "EA", "TTWO", "MTCH", "BKNG", "DPZ", "MAR", "HAS", "MAT"
     ]
 
     symbols = sorted(symbols)
     
-    max_symbols_length = max([len(symbol) for symbol in symbols])
+    max_symbols_length = max([len(symbol) for symbol in symbols]) + 2
 
     print_details = False
     print_history = False
@@ -42,8 +43,16 @@ def main():
     bollingerBandsStrategy = BollingerBandsStrategy(period=20, std_dev=2)
     stochasticOscillatorStrategy = StochasticOscillatorStrategy(period=20, overbought=80, oversold=20)
     macdStrategy = MACDStrategy(short_window=12, long_window=26, signal_window=9)
+    ichimokuCloudStrategy = IchimokuCloudStrategy()
 
-    strategies : list[TradingStrategy] = [movingAverageStrategy, rsiStrategy, bollingerBandsStrategy, stochasticOscillatorStrategy, macdStrategy]
+    strategies : list[TradingStrategy] = [
+        movingAverageStrategy,
+        rsiStrategy,
+        bollingerBandsStrategy,
+        stochasticOscillatorStrategy,
+        macdStrategy,
+        ichimokuCloudStrategy
+    ]
 
     max_name_length = max([len(strategy.name) for strategy in strategies])
 
