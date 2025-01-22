@@ -1,5 +1,5 @@
 from data_handler import DataFetcher, DataStorage
-from moving_average_strategy import MovingAverageStrategy
+from strategies.moving_average import MovingAverageStrategy
 from broker import Broker
 from backtester import Backtester
 
