@@ -2,6 +2,7 @@ from data_handler import DataFetcher, DataStorage
 from strategies.moving_average import MovingAverageStrategy
 from strategies.RSI import RSIStrategy
 from strategies.bollinger_bands import BollingerBandsStrategy
+from strategies.stochastic_oscillator import StochasticOscillatorStrategy
 from strategy import TradingStrategy
 from broker import Broker
 from backtester import Backtester
@@ -23,8 +24,9 @@ def main():
     movingAverageStrategy = MovingAverageStrategy(short_window=5, long_window=40)
     rsiStrategy = RSIStrategy(period=14, overbought=70, oversold=30)
     bollingerBandsStrategy = BollingerBandsStrategy(period=20, std_dev=2)
+    stochasticOscillatorStrategy = StochasticOscillatorStrategy(period=20, overbought=80, oversold=20)
 
-    strategies : list[TradingStrategy] = [movingAverageStrategy, rsiStrategy, bollingerBandsStrategy]
+    strategies : list[TradingStrategy] = [movingAverageStrategy, rsiStrategy, bollingerBandsStrategy, stochasticOscillatorStrategy]
 
     max_name_length = max([len(strategy.name) for strategy in strategies])
 
@@ -39,7 +41,7 @@ def main():
         
         # Fetch data
         try:
-            data = data_fetcher.fetch_historical_data(symbol=symbol, start_date="2022-01-01", end_date="2024-05-30") # Example dates
+            data = data_fetcher.fetch_historical_data(symbol=symbol, start_date="2024-01-01", end_date="2024-05-30") # Example dates
             data_storage.store_data(symbol=symbol, data=data)
             data = data_storage.get_data(symbol=symbol)
         except ValueError as e:
