@@ -1,6 +1,7 @@
 from data_handler import DataFetcher, DataStorage
 from strategies.moving_average import MovingAverageStrategy
 from strategies.RSI import RSIStrategy
+from strategies.bollinger_bands import BollingerBandsStrategy
 from strategy import TradingStrategy
 from broker import Broker
 from backtester import Backtester
@@ -9,8 +10,8 @@ from backtester import Backtester
 def main():
     """Entry point of the application."""
 
-    symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'PFE', 'MRNA', 'BNTX', 'JNJ', 'NVAX'] # Example values
-    # symbols = ['NFLX', 'DIS', 'T', 'VZ', 'KO', 'PEP', 'MCD', 'SBUX', 'NKE', 'WMT', 'COST', 'PG', 'UNH', 'JPM', 'GS', 'MS', 'BAC', 'C', 'WFC', 'AXP', 'V', 'MA', 'PYPL', 'SQ', 'INTC', 'AMD', 'NVDA', 'QCOM', 'MU', 'TSM', 'IBM', 'ORCL', 'CRM', 'ADBE', 'NOW', 'ZM', 'DOCU', 'WORK', 'SNOW', 'FSLY', 'NET', 'CRWD', 'PANW', 'ZS', 'OKTA', 'SPLK', 'DDOG', 'MDB', 'TWLO', 'AYX', 'COUP', 'BILL', 'U', 'FVRR', 'UPWK', 'ETSY', 'SHOP', 'SE', 'CRSP', 'EDIT', 'NTLA', 'BEAM', 'TWST', 'PACB', 'CDNA', 'VIR', 'MRNA', 'BNTX', 'NVAX', 'INO', 'VXRT', 'MRK', 'ABBV', 'GILD', 'LLY', 'REGN', 'BMY', 'ABBV', 'PFE', 'JNJ', 'AZN', 'SNY', 'NVS', 'GSK', 'MRK', 'BAYRY', 'RHHBY', 'TAK', 'AMGN', 'BIIB', 'VRTX', 'ALXN', 'INCY', 'SGEN', 'CRSP', 'EDIT', 'NTLA', 'BEAM', 'TWST', 'PACB', 'CDNA', 'VIR', 'MRNA', 'BNTX', 'NVAX', 'INO', 'VXRT', 'MRK', 'ABBV', 'GILD', 'LLY', 'REGN', 'BMY', 'ABBV', 'PFE', 'JNJ', 'AZN', 'SNY', 'NVS', 'GSK', 'MRK', 'BAYRY', 'RHHBY', 'TAK', 'AMGN', 'BIIB', 'VRTX', 'ALXN', 'INCY', 'SGEN', 'CRSP', 'EDIT', 'NTLA', 'BEAM', 'TWST', 'PACB', 'CDNA']
+    # symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'PFE', 'MRNA', 'BNTX', 'JNJ', 'NVAX'] # Example values
+    symbols = ['NFLX', 'DIS', 'T', 'VZ', 'KO', 'PEP', 'MCD', 'SBUX', 'NKE', 'WMT', 'COST', 'PG', 'UNH', 'JPM', 'GS', 'MS', 'BAC', 'C', 'WFC', 'AXP', 'V', 'MA', 'PYPL', 'SQ', 'INTC', 'AMD', 'NVDA', 'QCOM', 'MU', 'TSM', 'IBM', 'ORCL', 'CRM', 'ADBE', 'NOW', 'ZM', 'DOCU', 'WORK', 'SNOW', 'FSLY', 'NET', 'CRWD', 'PANW', 'ZS', 'OKTA', 'SPLK', 'DDOG', 'MDB', 'TWLO', 'AYX', 'COUP', 'BILL', 'U', 'FVRR', 'UPWK', 'ETSY', 'SHOP', 'SE', 'CRSP', 'EDIT', 'NTLA', 'BEAM', 'TWST', 'PACB', 'CDNA', 'VIR', 'MRNA', 'BNTX', 'NVAX', 'INO', 'VXRT', 'MRK', 'ABBV', 'GILD', 'LLY', 'REGN', 'BMY', 'ABBV', 'PFE', 'JNJ', 'AZN', 'SNY', 'NVS', 'GSK', 'MRK', 'BAYRY', 'RHHBY', 'TAK', 'AMGN', 'BIIB', 'VRTX', 'ALXN', 'INCY', 'SGEN', 'CRSP', 'EDIT', 'NTLA', 'BEAM', 'TWST', 'PACB', 'CDNA', 'VIR', 'MRNA', 'BNTX', 'NVAX', 'INO', 'VXRT', 'MRK', 'ABBV', 'GILD', 'LLY', 'REGN', 'BMY', 'ABBV', 'PFE', 'JNJ', 'AZN', 'SNY', 'NVS', 'GSK', 'MRK', 'BAYRY', 'RHHBY', 'TAK', 'AMGN', 'BIIB', 'VRTX', 'ALXN', 'INCY', 'SGEN', 'CRSP', 'EDIT', 'NTLA', 'BEAM', 'TWST', 'PACB', 'CDNA']
     
     max_symbols_length = max([len(symbol) for symbol in symbols])
 
@@ -21,8 +22,9 @@ def main():
 
     movingAverageStrategy = MovingAverageStrategy(short_window=5, long_window=40)
     rsiStrategy = RSIStrategy(period=14, overbought=70, oversold=30)
+    bollingerBandsStrategy = BollingerBandsStrategy(period=20, std_dev=2)
 
-    strategies : list[TradingStrategy] = [movingAverageStrategy, rsiStrategy]
+    strategies : list[TradingStrategy] = [movingAverageStrategy, rsiStrategy, bollingerBandsStrategy]
 
     max_name_length = max([len(strategy.name) for strategy in strategies])
 
