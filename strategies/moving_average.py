@@ -59,6 +59,11 @@ class MovingAverageStrategy(TradingStrategy):
     def update_historical_data(self, data: list):
         self.historical_data = data
 
+    def reset(self):
+        self.historical_data = []
+        self.prev_short_ma = 0
+        self.prev_long_ma = 0
+
     historical_data = []
     prev_short_ma = 0
     prev_long_ma = 0

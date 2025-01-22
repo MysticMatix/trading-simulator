@@ -19,3 +19,8 @@ class TradingStrategy(ABC):
     def update_historical_data(self, data: list):
         """Abstract method, updates the historical data used by the strategy."""
         pass
+
+    @abstractmethod
+    def reset(self):
+        """Abstract method, resets the strategy."""
+        pass
