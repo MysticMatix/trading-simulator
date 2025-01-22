@@ -5,6 +5,7 @@ from strategies.bollinger_bands import BollingerBandsStrategy
 from strategies.stochastic_oscillator import StochasticOscillatorStrategy
 from strategies.macd import MACDStrategy
 from strategies.ichimoku_cloud import IchimokuCloudStrategy
+from strategies.adx import ADXStrategy
 from strategy import TradingStrategy
 from broker import Broker
 from backtester import Backtester
@@ -44,6 +45,7 @@ def main():
     stochasticOscillatorStrategy = StochasticOscillatorStrategy(period=20, overbought=80, oversold=20)
     macdStrategy = MACDStrategy(short_window=12, long_window=26, signal_window=9)
     ichimokuCloudStrategy = IchimokuCloudStrategy()
+    adxStrategy = ADXStrategy(period=20)
 
     strategies : list[TradingStrategy] = [
         movingAverageStrategy,
@@ -51,7 +53,8 @@ def main():
         bollingerBandsStrategy,
         stochasticOscillatorStrategy,
         macdStrategy,
-        ichimokuCloudStrategy
+        ichimokuCloudStrategy,
+        adxStrategy
     ]
 
     max_name_length = max([len(strategy.name) for strategy in strategies])
@@ -66,7 +69,7 @@ def main():
         
         # Fetch data
         try:
-            data = data_fetcher.fetch_historical_data(symbol=symbol, start_date="2022-01-01", end_date="2024-05-30") # Example dates
+            data = data_fetcher.fetch_historical_data(symbol=symbol, start_date="2024-01-01", end_date="2024-05-30") # Example dates
             data_storage.store_data(symbol=symbol, data=data)
             data = data_storage.get_data(symbol=symbol)
         except ValueError as e:
