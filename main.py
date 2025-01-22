@@ -3,16 +3,32 @@ from strategies.moving_average import MovingAverageStrategy
 from strategies.RSI import RSIStrategy
 from strategies.bollinger_bands import BollingerBandsStrategy
 from strategies.stochastic_oscillator import StochasticOscillatorStrategy
+from strategies.macd import MACDStrategy
 from strategy import TradingStrategy
 from broker import Broker
 from backtester import Backtester
+from tqdm import tqdm
 
 
 def main():
     """Entry point of the application."""
 
     # symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'PFE', 'MRNA', 'BNTX', 'JNJ', 'NVAX'] # Example values
-    symbols = ['NFLX', 'DIS', 'T', 'VZ', 'KO', 'PEP', 'MCD', 'SBUX', 'NKE', 'WMT', 'COST', 'PG', 'UNH', 'JPM', 'GS', 'MS', 'BAC', 'C', 'WFC', 'AXP', 'V', 'MA', 'PYPL', 'SQ', 'INTC', 'AMD', 'NVDA', 'QCOM', 'MU', 'TSM', 'IBM', 'ORCL', 'CRM', 'ADBE', 'NOW', 'ZM', 'DOCU', 'WORK', 'SNOW', 'FSLY', 'NET', 'CRWD', 'PANW', 'ZS', 'OKTA', 'SPLK', 'DDOG', 'MDB', 'TWLO', 'AYX', 'COUP', 'BILL', 'U', 'FVRR', 'UPWK', 'ETSY', 'SHOP', 'SE', 'CRSP', 'EDIT', 'NTLA', 'BEAM', 'TWST', 'PACB', 'CDNA', 'VIR', 'MRNA', 'BNTX', 'NVAX', 'INO', 'VXRT', 'MRK', 'ABBV', 'GILD', 'LLY', 'REGN', 'BMY', 'ABBV', 'PFE', 'JNJ', 'AZN', 'SNY', 'NVS', 'GSK', 'MRK', 'BAYRY', 'RHHBY', 'TAK', 'AMGN', 'BIIB', 'VRTX', 'ALXN', 'INCY', 'SGEN', 'CRSP', 'EDIT', 'NTLA', 'BEAM', 'TWST', 'PACB', 'CDNA', 'VIR', 'MRNA', 'BNTX', 'NVAX', 'INO', 'VXRT', 'MRK', 'ABBV', 'GILD', 'LLY', 'REGN', 'BMY', 'ABBV', 'PFE', 'JNJ', 'AZN', 'SNY', 'NVS', 'GSK', 'MRK', 'BAYRY', 'RHHBY', 'TAK', 'AMGN', 'BIIB', 'VRTX', 'ALXN', 'INCY', 'SGEN', 'CRSP', 'EDIT', 'NTLA', 'BEAM', 'TWST', 'PACB', 'CDNA']
+    symbols = [
+        "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "INTC", "AMD", "IBM", "ORCL",
+        "ZM", "PYPL", "NFLX", "META", "ADBE", "CSCO", "CRM", "SHOP", "SQ", "TWLO",
+        "UBER", "LYFT", "ABNB", "SNAP", "BABA", "TSM", "V", "MA", "JPM", "BAC",
+        "WFC", "GS", "MS", "C", "T", "VZ", "KO", "PEP", "NKE", "HD",
+        "WMT", "COST", "MCD", "SBUX", "DIS", "BA", "CAT", "XOM", "CVX", "BP",
+        "PFE", "MRNA", "JNJ", "BNTX", "MRK", "ABBV", "GILD", "CVS", "UNH", "TMO",
+        "UPS", "FDX", "DE", "GM", "F", "RIVN", "LCID", "RCL", "CCL", "DAL",
+        "AAL", "UAL", "LUV", "GE", "HON", "MMM", "DOW", "GLW", "APD", "BK",
+        "TROW", "VFC", "AMAT", "QCOM", "MU", "TXN", "FSLR", "RUN", "PLUG", "SPWR",
+        "COP", "SLB", "HAL", "MRO", "EOG", "LMT", "RTX", "GD", "NOC", "PYPL",
+        "ADSK", "ATVI", "EA", "TTWO", "MTCH", "BKNG", "DPZ", "MAR", "HAS", "MAT"
+    ]
+
+    symbols = sorted(symbols)
     
     max_symbols_length = max([len(symbol) for symbol in symbols])
 
@@ -25,13 +41,13 @@ def main():
     rsiStrategy = RSIStrategy(period=14, overbought=70, oversold=30)
     bollingerBandsStrategy = BollingerBandsStrategy(period=20, std_dev=2)
     stochasticOscillatorStrategy = StochasticOscillatorStrategy(period=20, overbought=80, oversold=20)
+    macdStrategy = MACDStrategy(short_window=12, long_window=26, signal_window=9)
 
-    strategies : list[TradingStrategy] = [movingAverageStrategy, rsiStrategy, bollingerBandsStrategy, stochasticOscillatorStrategy]
+    strategies : list[TradingStrategy] = [movingAverageStrategy, rsiStrategy, bollingerBandsStrategy, stochasticOscillatorStrategy, macdStrategy]
 
     max_name_length = max([len(strategy.name) for strategy in strategies])
 
-    for symbol in symbols:
-        print(f"Running backtest for symbol: {symbol}")
+    for symbol in tqdm(symbols):
         # Create instances
         data_fetcher = DataFetcher()
         data_storage = DataStorage()
@@ -41,7 +57,7 @@ def main():
         
         # Fetch data
         try:
-            data = data_fetcher.fetch_historical_data(symbol=symbol, start_date="2024-01-01", end_date="2024-05-30") # Example dates
+            data = data_fetcher.fetch_historical_data(symbol=symbol, start_date="2022-01-01", end_date="2024-05-30") # Example dates
             data_storage.store_data(symbol=symbol, data=data)
             data = data_storage.get_data(symbol=symbol)
         except ValueError as e:
