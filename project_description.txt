@@ -31,15 +31,20 @@ File Structure:
                 - __init__(self, name: str): Constructor.
                 - should_buy(self, data_point: dict) -> bool: Abstract method, returns True if the strategy suggests a buy.
                 - should_sell(self, data_point: dict) -> bool: Abstract method, returns True if the strategy suggests a sell.
+                - update_historical_data(self, data: list): Abstract method, updates the historical data used by the strategy
         - MovingAverageStrategy:
             - Attributes:
                 - short_window: Integer, the short window size for the moving average.
                 - long_window: Integer, the long window size for the moving average.
+                - historical_data: A list to store historical data
+                - prev_short_ma: Stores the previous short moving average
+                - prev_long_ma: Stores the previous long moving average
             - Methods:
                 - __init__(self, short_window: int, long_window: int): Constructor.
                 - should_buy(self, data_point: dict) -> bool: Implements the buy logic based on moving averages.
                 - should_sell(self, data_point: dict) -> bool: Implements the sell logic based on moving averages.
                 - calculate_moving_average(self, data: list, window: int) -> float: Calculates the moving average for a given data list.
+                - update_historical_data(self, data: list): Updates the historical data used by the strategy.
 
 3. broker.py:
     - Purpose: Simulates the execution of trades.
@@ -81,7 +86,7 @@ Implementation Status:
 
 Problem Description:
 
-The algorithmic trading simulator is not generating any trades. The backtest results always show an initial balance equal to the final balance, zero profit, and zero trades. The transaction history is always empty.
+The algorithmic trading simulator is now generating trades! The backtest results now show the initial balance, final balance, profit, number of trades, and the transaction history.
 
 Debugging Steps:
 
@@ -94,11 +99,12 @@ Debugging Steps:
 7.  Verified that previous moving averages are being updated and compared correctly
 8.  Modified the `should_buy` and `should_sell` methods to check the *previous* short and long moving averages and compare them with the *current* ones to detect the cross. Removed `last_short_ma` and `last_long_ma` variables
 9. Modified the `update_historical_data` method to initialize `prev_short_ma` and `prev_long_ma` using the *first* available data point, and then update it with the current moving averages.
+10. Removed the initialization of `prev_short_ma` and `prev_long_ma` from the `update_historical_data` method, so the cross detection logic works correctly.
 
 Current Issue:
 
-The strategy is not generating any trades. The buy and sell conditions are never met, and the transaction history is empty. The moving averages are being calculated correctly but it seems that the logic to detect the cross is not working as expected. I am unable to identify the reason for this failure, and I am out of ideas on how to fix this.
+The strategy is now generating trades as expected.
 
 Next Steps:
 
-I am unable to fix this issue, and I am not sure what to do anymore.
+The project is now working correctly.
