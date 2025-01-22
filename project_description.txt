@@ -1,0 +1,104 @@
+Project Name: Algorithmic Trading Simulator
+
+Description: This project aims to create a basic algorithmic trading simulator that uses historical market data to simulate trades based on a defined strategy. The project is designed with a focus on object-oriented programming principles and a modular structure to ensure scalability and maintainability.
+
+File Structure:
+
+1. data_handler.py:
+    - Purpose: Responsible for fetching, storing, and processing historical market data.
+    - Classes:
+        - DataFetcher:
+            - Attributes:
+                - source_type: String, specifies the data source ('yfinance', 'csv', etc.).
+            - Methods:
+                - __init__(self, source_type='yfinance'): Constructor, sets the data source.
+                - fetch_historical_data(self, symbol: str, start_date: str, end_date: str) -> dict: Fetches historical data and returns a dictionary where keys are timestamps and values are dictionaries with fields like `open`, `high`, `low`, `close`, `volume`.
+        - DataStorage:
+            - Attributes:
+                - data: Dictionary, stores the fetched historical data.
+            - Methods:
+                - __init__(self): Constructor.
+                - store_data(self, symbol: str, data: dict): Stores the fetched data for a given symbol.
+                - get_data(self, symbol: str, time_frame: int = 0) -> list: Returns a list of data points for a given symbol and timeframe.
+
+2. strategy.py:
+    - Purpose: Encapsulates the trading strategy logic.
+    - Classes:
+        - TradingStrategy (Abstract Base Class):
+            - Attributes:
+                - name: String, the name of the strategy.
+            - Methods:
+                - __init__(self, name: str): Constructor.
+                - should_buy(self, data_point: dict) -> bool: Abstract method, returns True if the strategy suggests a buy.
+                - should_sell(self, data_point: dict) -> bool: Abstract method, returns True if the strategy suggests a sell.
+        - MovingAverageStrategy:
+            - Attributes:
+                - short_window: Integer, the short window size for the moving average.
+                - long_window: Integer, the long window size for the moving average.
+            - Methods:
+                - __init__(self, short_window: int, long_window: int): Constructor.
+                - should_buy(self, data_point: dict) -> bool: Implements the buy logic based on moving averages.
+                - should_sell(self, data_point: dict) -> bool: Implements the sell logic based on moving averages.
+                - calculate_moving_average(self, data: list, window: int) -> float: Calculates the moving average for a given data list.
+
+3. broker.py:
+    - Purpose: Simulates the execution of trades.
+    - Classes:
+        - Broker:
+            - Attributes:
+                - balance: Float, current balance of the broker.
+                - portfolio: Dictionary, stores the current assets and their amounts.
+                - transaction_history: A list of dictionaries representing transactions.
+            - Methods:
+                - __init__(self, initial_balance: float): Constructor.
+                - execute_trade(self, trade_type: str, symbol: str, price: float, volume: float) -> bool: Simulates the execution of a trade, returns True if success, False if failed, logs the transaction in the `transaction_history`.
+                - get_balance(self) -> float: Returns current balance.
+                - get_portfolio(self) -> dict: Returns current portfolio.
+                - get_transaction_history(self) -> list: Returns transaction history
+
+4. backtester.py:
+    - Purpose: Responsible for backtesting the trading strategy using historical data.
+    - Classes:
+        - Backtester:
+            - Attributes:
+                - broker: Broker object to execute simulated trades
+            - Methods:
+                - __init__(self, initial_balance: float): Constructor, creates an internal Broker instance.
+                - run_backtest(self, strategy: TradingStrategy, data: list) -> dict: Simulates the backtest and returns a dictionary of stats.
+
+5. main.py:
+    - Purpose: The entry point of the application, sets up the backtest.
+    - Details: Creates instances of DataFetcher, DataStorage, TradingStrategy, Broker, and Backtester, fetches data, sets the strategy, and runs the backtest, prints the results of the backtest.
+
+
+Implementation Status:
+
+- [x] data_handler.py: DataFetcher (with yfinance) and DataStorage are implemented and tested.
+- [x] strategy.py: TradingStrategy (abstract) and MovingAverageStrategy are implemented.
+- [x] broker.py: Broker class is implemented.
+- [x] backtester.py: Backtester is implemented.
+- [x] main.py: Main functionality is implemented
+
+Problem Description:
+
+The algorithmic trading simulator is not generating any trades. The backtest results always show an initial balance equal to the final balance, zero profit, and zero trades. The transaction history is always empty.
+
+Debugging Steps:
+
+1.  Verified data fetching and storage in `data_handler.py`. The data is fetched correctly.
+2.  Debugged the `MovingAverageStrategy` to verify the moving average calculations, and `should_buy` and `should_sell` logic.
+3.  Verified the broker's trade execution logic. The trades are only not being executed.
+4.  Verified backtester logic, the backtester is iterating over the data, and calling the strategy methods, but no trades are being triggered
+5.  Verified that historical data is being passed correctly to the strategy
+6.  Verified the `calculate_moving_average` method is calculating the averages correctly, also fixed the issue of returning 0 when there isn't enough data
+7.  Verified that previous moving averages are being updated and compared correctly
+8.  Modified the `should_buy` and `should_sell` methods to check the *previous* short and long moving averages and compare them with the *current* ones to detect the cross. Removed `last_short_ma` and `last_long_ma` variables
+9. Modified the `update_historical_data` method to initialize `prev_short_ma` and `prev_long_ma` using the *first* available data point, and then update it with the current moving averages.
+
+Current Issue:
+
+The strategy is not generating any trades. The buy and sell conditions are never met, and the transaction history is empty. The moving averages are being calculated correctly but it seems that the logic to detect the cross is not working as expected. I am unable to identify the reason for this failure, and I am out of ideas on how to fix this.
+
+Next Steps:
+
+I am unable to fix this issue, and I am not sure what to do anymore.
