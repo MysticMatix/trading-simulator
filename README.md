@@ -19,7 +19,7 @@ The project consists of the following modules:
       *    `macd.py`: Implements a MACD based strategy.
       *    `ichimoku_cloud.py`: Implements an Ichimoku cloud based strategy.
       *    `adx.py`: Implements an ADX based strategy.
-*   `strategies/hybrid`: Contains a class that makes it easy to combine many different strategies
+*   `strategies/hybrid/`: Contains classes that makes it easy to combine many different strategies
 *   `strategy.py`: Defines the abstract base class for all trading strategies.
 *   `broker.py`: Simulates the execution of trades and manages the portfolio.
 *   `backtester.py`: Simulates the backtesting process.
