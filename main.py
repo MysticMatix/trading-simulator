@@ -8,7 +8,8 @@ from strategies.basic.macd import MACDStrategy
 from strategies.basic.ichimoku_cloud import IchimokuCloudStrategy
 from strategies.basic.adx import ADXStrategy
 
-from strategies.hybrid.hybrid import HybridStrategy
+from strategies.hybrid.basic import HybridStrategy
+from strategies.hybrid.custom import CustomStrategy
 
 from strategy import TradingStrategy
 from broker import Broker
@@ -52,6 +53,7 @@ def main():
     adxStrategy = ADXStrategy(period=20)
 
     ichimokuADX = HybridStrategy([IchimokuCloudStrategy(), ADXStrategy(period=20)], weights=[0.5, 0.5], name="Ichimoku + ADX")
+    ichimokuADX2 = CustomStrategy([IchimokuCloudStrategy(), ADXStrategy(period=20)], buy_merging_function=lambda x: x[0] * x[1], sell_merging_function=lambda x: x[0] * x[1], name="Ichimoku * ADX")
 
     strategies : list[TradingStrategy] = [
         movingAverageStrategy,
@@ -61,7 +63,8 @@ def main():
         macdStrategy,
         adxStrategy,
         ichimokuCloudStrategy,
-        ichimokuADX
+        ichimokuADX,
+        ichimokuADX2
     ]
 
     max_name_length = max([len(strategy.name) for strategy in strategies])
