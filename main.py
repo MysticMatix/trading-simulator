@@ -1,11 +1,11 @@
 from data_handler import DataFetcher, DataStorage
-from strategies.moving_average import MovingAverageStrategy
-from strategies.RSI import RSIStrategy
-from strategies.bollinger_bands import BollingerBandsStrategy
-from strategies.stochastic_oscillator import StochasticOscillatorStrategy
-from strategies.macd import MACDStrategy
-from strategies.ichimoku_cloud import IchimokuCloudStrategy
-from strategies.adx import ADXStrategy
+from strategies.basic.moving_average import MovingAverageStrategy
+from strategies.basic.RSI import RSIStrategy
+from strategies.basic.bollinger_bands import BollingerBandsStrategy
+from strategies.basic.stochastic_oscillator import StochasticOscillatorStrategy
+from strategies.basic.macd import MACDStrategy
+from strategies.basic.ichimoku_cloud import IchimokuCloudStrategy
+from strategies.basic.adx import ADXStrategy
 from strategy import TradingStrategy
 from broker import Broker
 from backtester import Backtester
@@ -15,7 +15,7 @@ from tqdm import tqdm
 def main():
     """Entry point of the application."""
 
-    # symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'PFE', 'MRNA', 'BNTX', 'JNJ', 'NVAX'] # Example values
+    symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'PFE', 'MRNA', 'BNTX', 'JNJ', 'NVAX'] # Example values
     symbols = [
         "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "INTC", "AMD", "IBM", "ORCL",
         "ZM", "PYPL", "NFLX", "META", "ADBE", "CSCO", "CRM", "SHOP", "SQ", "TWLO",
@@ -48,12 +48,12 @@ def main():
     adxStrategy = ADXStrategy(period=20)
 
     strategies : list[TradingStrategy] = [
-        # movingAverageStrategy,
-        # rsiStrategy,
-        # bollingerBandsStrategy,
-        # stochasticOscillatorStrategy,
-        # macdStrategy,
-        # adxStrategy,
+        movingAverageStrategy,
+        rsiStrategy,
+        bollingerBandsStrategy,
+        stochasticOscillatorStrategy,
+        macdStrategy,
+        adxStrategy,
         ichimokuCloudStrategy
     ]
 
@@ -69,7 +69,7 @@ def main():
         
         # Fetch data
         try:
-            data = data_fetcher.fetch_historical_data(symbol=symbol, start_date="2020-01-01", end_date="2024-05-30") # Example dates
+            data = data_fetcher.fetch_historical_data(symbol=symbol, start_date="2024-01-01", end_date="2024-05-30") # Example dates
             data_storage.store_data(symbol=symbol, data=data)
             data = data_storage.get_data(symbol=symbol)
         except ValueError as e:
