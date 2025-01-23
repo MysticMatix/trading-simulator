@@ -48,13 +48,13 @@ def main():
     adxStrategy = ADXStrategy(period=20)
 
     strategies : list[TradingStrategy] = [
-        movingAverageStrategy,
-        rsiStrategy,
-        bollingerBandsStrategy,
-        stochasticOscillatorStrategy,
-        macdStrategy,
-        ichimokuCloudStrategy,
-        adxStrategy
+        # movingAverageStrategy,
+        # rsiStrategy,
+        # bollingerBandsStrategy,
+        # stochasticOscillatorStrategy,
+        # macdStrategy,
+        # adxStrategy,
+        ichimokuCloudStrategy
     ]
 
     max_name_length = max([len(strategy.name) for strategy in strategies])
@@ -69,7 +69,7 @@ def main():
         
         # Fetch data
         try:
-            data = data_fetcher.fetch_historical_data(symbol=symbol, start_date="2024-01-01", end_date="2024-05-30") # Example dates
+            data = data_fetcher.fetch_historical_data(symbol=symbol, start_date="2020-01-01", end_date="2024-05-30") # Example dates
             data_storage.store_data(symbol=symbol, data=data)
             data = data_storage.get_data(symbol=symbol)
         except ValueError as e:
