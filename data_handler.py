@@ -29,7 +29,8 @@ class DataFetcher:
                     'high': row['High'],
                     'low': row['Low'],
                     'close': row['Close'],
-                    'volume': row['Volume']
+                    'volume': row['Volume'],
+                    'date': str(index)
                 }
             return data
         except Exception as e:

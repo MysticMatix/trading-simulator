@@ -1,4 +1,5 @@
 from data_handler import DataFetcher, DataStorage
+
 from strategies.basic.moving_average import MovingAverageStrategy
 from strategies.basic.RSI import RSIStrategy
 from strategies.basic.bollinger_bands import BollingerBandsStrategy
@@ -6,6 +7,9 @@ from strategies.basic.stochastic_oscillator import StochasticOscillatorStrategy
 from strategies.basic.macd import MACDStrategy
 from strategies.basic.ichimoku_cloud import IchimokuCloudStrategy
 from strategies.basic.adx import ADXStrategy
+
+from strategies.hybrid.hybrid import HybridStrategy
+
 from strategy import TradingStrategy
 from broker import Broker
 from backtester import Backtester
@@ -16,19 +20,19 @@ def main():
     """Entry point of the application."""
 
     symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'PFE', 'MRNA', 'BNTX', 'JNJ', 'NVAX'] # Example values
-    symbols = [
-        "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "INTC", "AMD", "IBM", "ORCL",
-        "ZM", "PYPL", "NFLX", "META", "ADBE", "CSCO", "CRM", "SHOP", "SQ", "TWLO",
-        "UBER", "LYFT", "ABNB", "SNAP", "BABA", "TSM", "V", "MA", "JPM", "BAC",
-        "WFC", "GS", "MS", "C", "T", "VZ", "KO", "PEP", "NKE", "HD",
-        "WMT", "COST", "MCD", "SBUX", "DIS", "BA", "CAT", "XOM", "CVX", "BP",
-        "PFE", "MRNA", "JNJ", "BNTX", "MRK", "ABBV", "GILD", "CVS", "UNH", "TMO",
-        "UPS", "FDX", "DE", "GM", "F", "RIVN", "LCID", "RCL", "CCL", "DAL",
-        "AAL", "UAL", "LUV", "GE", "HON", "MMM", "DOW", "GLW", "APD", "BK",
-        "TROW", "VFC", "AMAT", "QCOM", "MU", "TXN", "FSLR", "RUN", "PLUG",
-        "COP", "SLB", "HAL", "MRO", "EOG", "LMT", "RTX", "GD", "NOC", "PYPL",
-        "ADSK", "EA", "TTWO", "MTCH", "BKNG", "DPZ", "MAR", "HAS", "MAT"
-    ]
+    # symbols = [
+    #     "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "INTC", "AMD", "IBM", "ORCL",
+    #     "ZM", "PYPL", "NFLX", "META", "ADBE", "CSCO", "CRM", "SHOP", "SQ", "TWLO",
+    #     "UBER", "LYFT", "ABNB", "SNAP", "BABA", "TSM", "V", "MA", "JPM", "BAC",
+    #     "WFC", "GS", "MS", "C", "T", "VZ", "KO", "PEP", "NKE", "HD",
+    #     "WMT", "COST", "MCD", "SBUX", "DIS", "BA", "CAT", "XOM", "CVX", "BP",
+    #     "PFE", "MRNA", "JNJ", "BNTX", "MRK", "ABBV", "GILD", "CVS", "UNH", "TMO",
+    #     "UPS", "FDX", "DE", "GM", "F", "RIVN", "LCID", "RCL", "CCL", "DAL",
+    #     "AAL", "UAL", "LUV", "GE", "HON", "MMM", "DOW", "GLW", "APD", "BK",
+    #     "TROW", "VFC", "AMAT", "QCOM", "MU", "TXN", "FSLR", "RUN", "PLUG",
+    #     "COP", "SLB", "HAL", "MRO", "EOG", "LMT", "RTX", "GD", "NOC", "PYPL",
+    #     "ADSK", "EA", "TTWO", "MTCH", "BKNG", "DPZ", "MAR", "HAS", "MAT"
+    # ]
 
     symbols = sorted(symbols)
     
@@ -47,6 +51,8 @@ def main():
     ichimokuCloudStrategy = IchimokuCloudStrategy()
     adxStrategy = ADXStrategy(period=20)
 
+    ichimokuADX = HybridStrategy([IchimokuCloudStrategy(), ADXStrategy(period=20)], weights=[0.5, 0.5], name="Ichimoku + ADX")
+
     strategies : list[TradingStrategy] = [
         movingAverageStrategy,
         rsiStrategy,
@@ -54,7 +60,8 @@ def main():
         stochasticOscillatorStrategy,
         macdStrategy,
         adxStrategy,
-        ichimokuCloudStrategy
+        ichimokuCloudStrategy,
+        ichimokuADX
     ]
 
     max_name_length = max([len(strategy.name) for strategy in strategies])
@@ -102,8 +109,10 @@ def main():
                     for transaction in results['transaction_history']:
                         print(transaction)
 
+    
+
     print()
-    for strategy, results in gains.items():
+    for strategy, results in sorted(gains.items(), key=lambda x: sum(x[1].values()), reverse=True):
         if print_details:
             print()
             print(f"Results for {strategy}")
