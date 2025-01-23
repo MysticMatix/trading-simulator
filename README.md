@@ -11,7 +11,7 @@ It currently uses yfinance
 The project consists of the following modules:
 
 *   `data_handler.py`: Fetches, stores, and provides historical market data.
-*   `strategies/`: Contains different trading strategies.
+*   `strategies/basic/`: Contains different trading strategies.
       *   `moving_average.py`: Implements a moving average crossover strategy.
       *    `rsi.py`: Implements an RSI based strategy.
       *    `bollinger_bands.py`: Implements a Bollinger bands strategy.
@@ -19,6 +19,7 @@ The project consists of the following modules:
       *    `macd.py`: Implements a MACD based strategy.
       *    `ichimoku_cloud.py`: Implements an Ichimoku cloud based strategy.
       *    `adx.py`: Implements an ADX based strategy.
+*   `strategies/hybrid`: Contains a class that makes it easy to combine many different strategies
 *   `strategy.py`: Defines the abstract base class for all trading strategies.
 *   `broker.py`: Simulates the execution of trades and manages the portfolio.
 *   `backtester.py`: Simulates the backtesting process.
